@@ -36,17 +36,4 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         post = get_object_or_404(Post, pk=self.kwargs.get('post_id'))
-        created = serializer.save(author=self.request.user, post=post)
-        return created
-
-    def perform_update(self, serializer):
-        post = get_object_or_404(Post, pk=self.kwargs.get('post_id'))
-        comment = post.comments.get(id=self.kwargs.get('comment_id'))
-        serialized = serializer(comment, data=self.request.data, partial=True)
-        serialized.save()
-        return post.comments.get(id=self.kwargs.get('comment_id'))
-
-    def destroy(self):
-        post = get_object_or_404(Post, pk=self.kwargs.get('post_id'))
-        comment = post.comments.get(id=self.kwargs.get('comment_id'))
-        self.perform_destroy(comment)
+        serializer.save(author=self.request.user, post=post)
